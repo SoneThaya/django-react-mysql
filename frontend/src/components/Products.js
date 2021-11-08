@@ -1,54 +1,79 @@
 import React from "react";
 
-const Products = () => {
-  return (
-    <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-      <div className="col">
-        <div className="card shadow-sm">
-          <svg
-            className="bd-placeholder-img card-img-top"
-            width="100%"
-            height="225"
-            xmlns="http://www.w3.org/2000/svg"
-            role="img"
-            aria-label="Placeholder: Thumbnail"
-            preserveAspectRatio="xMidYMid slice"
-            focusable="false"
-          >
-            <title>Placeholder</title>
-            <rect width="100%" height="100%" fill="#55595c" />
-            <text x="50%" y="50%" fill="#eceeef" dy=".3em">
-              Thumbnail
-            </text>
-          </svg>
+const Products = (props) => {
+  const search = (s) => {
+    props.setFilters({
+      ...props.filters,
+      s,
+      page: 1,
+    });
+  };
 
-          <div className="card-body">
-            <p className="card-text">
-              This is a wider card with supporting text below as a natural
-              lead-in to additional content. This content is a little bit
-              longer.
-            </p>
-            <div className="d-flex justify-content-between align-items-center">
-              <div className="btn-group">
-                <button
-                  type="button"
-                  className="btn btn-sm btn-outline-secondary"
-                >
-                  View
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-sm btn-outline-secondary"
-                >
-                  Edit
-                </button>
-              </div>
-              <small className="text-muted">9 mins</small>
-            </div>
-          </div>
+  const sort = (sort) => {
+    props.setFilters({
+      ...props.filters,
+      sort,
+      page: 1,
+    });
+  };
+
+  const load = () => {
+    props.setFilters({
+      ...props.filters,
+      page: props.filters.page + 1,
+    });
+  };
+
+  let button;
+
+  button = (
+    <div className="d-flex justify-content-center mt-4">
+      <button className="btn btn-primary" onClick={load}>
+        Load More
+      </button>
+    </div>
+  );
+
+  return (
+    <>
+      <div className="col-md-12 mb-4 input-group">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search"
+          onChange={(e) => search(e.target.value)}
+        />
+        <div className="input-group-append">
+          <select
+            className="form-select"
+            onChange={(e) => sort(e.target.value)}
+          >
+            <option>Select</option>
+            <option value="asc">Price Ascending</option>
+            <option value="desc">Price Descending</option>
+          </select>
         </div>
       </div>
-    </div>
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        {props.products.map((product) => {
+          return (
+            <div className="col">
+              <div className="card shadow-sm">
+                <img src={product.image} height={200} />
+
+                <div className="card-body">
+                  <p className="card-text">{product.title}</p>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <small className="text-muted">${product.price}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {button}
+    </>
   );
 };
 
